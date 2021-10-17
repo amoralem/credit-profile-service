@@ -28,8 +28,14 @@ public class ProfileServiceImpl implements IProfileService {
 		Optional<Profile> optProfile = profileRepository.findProfile(request.getYourPassion(), 
 																		request.getMonthlySalary(), 
 																		request.getAge());
-		if(!optProfile.isPresent())
-			throw new DataExcepcion(MessageExceptionHandler.DETAIL_REJECTED_REQUEST);
+		if(!optProfile.isPresent()) {			
+			optProfile = profileRepository.
+					findProfileMonthlyMore(
+							request.getYourPassion(),request.getMonthlySalary(),request.getAge());
+			
+			if(!optProfile.isPresent())
+				throw new DataExcepcion(MessageExceptionHandler.DETAIL_REJECTED_REQUEST);
+		}
 		
 		return new Response(optProfile.get().getCreditCards());
 	}
